@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Porsche | Легенда скорости</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        body {
+            background-color: #000;
+            color: #fff;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        h1, h2, h3 {
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: #cc0000;
+            color: white;
+            padding: 12px 32px;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            border: 2px solid #cc0000;
+        }
+        
+        .btn:hover {
+            background-color: transparent;
+            color: #cc0000;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(204, 0, 0, 0.3);
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            border: 2px solid #cc0000;
+            color: #cc0000;
+        }
+        
+        .btn-outline:hover {
+            background-color: #cc0000;
+            color: white;
+        }
+        
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 25px 0;
+            z-index: 1000;
+            background-color: rgba(0, 0, 0, 0.9);
+            transition: all 0.4s ease;
+        }
+        
+        header.scrolled {
+            padding: 15px 0;
+            background-color: rgba(0, 0, 0, 0.95);
+            box-shadow: 0 5px 20px rgba(204, 0, 0, 0.1);
+        }
+        
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            width: 120px;
+            height: auto;
+            animation: logoGlow 3s infinite alternate;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin-left: 40px;
+        }
+        
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 14px;
+            transition: color 0.3s;
+            position: relative;
+        }
+        
+        nav ul li a:hover {
+            color: #cc0000;
+        }
+        
+        nav ul li a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: #cc0000;
+            transition: width 0.3s;
+        }
+        
+        nav ul li a:hover::after {
+            width: 100%;
+        }
+        
+        .hero {
+            height: 100vh;
+            position: relative;
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+        }
+        
+        .hero-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.9));
+            background-size: cover;
+            background-position: center;
+            animation: zoomEffect 20s infinite alternate;
+            z-index: -1;
+        }
+        
+        .hero-content {
+            max-width: 800px;
+            animation: fadeInUp 1.5s ease-out;
+        }
+        
+        .hero h1 {
+            font-size: 5rem;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            background: linear-gradient(to right, #fff, #cc0000);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: textGlow 2s infinite alternate;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 40px;
+            color: #ccc;
+            max-width: 600px;
+        }
+        
+        .models {
+            padding: 120px 0;
+            background-color: #0a0a0a;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 70px;
+        }
+        
+        .section-title h2 {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .section-title h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background-color: #cc0000;
+        }
+        
+        .section-title p {
+            color: #aaa;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .models-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+        }
+        
+        .model-card {
+            background-color: #111;
+            border-radius: 10px;
+            overflow: hidden;
+            transition: all 0.5s ease;
+            position: relative;
+            opacity: 0;
+            transform: translateY(50px);
+            animation: cardAppear 0.8s forwards;
+        }
+        
+        .model-card:nth-child(1) { animation-delay: 0.2s; }
+        .model-card:nth-child(2) { animation-delay: 0.4s; }
+        .model-card:nth-child(3) { animation-delay: 0.6s; }
+        
+        .model-card:hover {
+            transform: translateY(-15px);
+            box-shadow: 0 20px 40px rgba(204, 0, 0, 0.2);
+        }
+        
+        .model-img {
+            height: 220px;
+            overflow: hidden;
+            background: linear-gradient(45deg, #1a1a1a, #333);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .model-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.8s;
+        }
+        
+        .model-card:hover .model-img img {
+            transform: scale(1.1);
+        }
+        
+        .model-content {
+            padding: 30px;
+        }
+        
+        .model-content h3 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            color: white;
+        }
+        
+        .model-content p {
+            color: #aaa;
+            margin-bottom: 20px;
+        }
+        
+        .specs {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #222;
+        }
+        
+        .spec-item {
+            text-align: center;
+        }
+        
+        .spec-value {
+            display: block;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #cc0000;
+        }
+        
+        .spec-label {
+            font-size: 0.9rem;
+            color: #888;
+        }
+        
+        .performance {
+            padding: 120px 0;
+            background: linear-gradient(rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.95));
+            position: relative;
+        }
+        
+        .performance-content {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        
+        .performance h2 {
+            font-size: 3.5rem;
+            margin-bottom: 30px;
+            color: white;
+        }
+        
+        .performance p {
+            font-size: 1.2rem;
+            margin-bottom: 50px;
+            color: #ccc;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            margin-top: 70px;
+        }
+        
+        .stat-item {
+            padding: 30px;
+            background-color: rgba(17, 17, 17, 0.8);
+            border-radius: 10px;
+            transition: all 0.5s;
+        }
+        
+        .stat-item:hover {
+            transform: translateY(-10px);
+            background-color: rgba(204, 0, 0, 0.1);
+        }
+        
+        .stat-value {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #cc0000;
+            margin-bottom: 10px;
+        }
+        
+        .stat-label {
+            font-size: 1.2rem;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .history {
+            padding: 120px 0;
+            background-color: #0a0a0a;
+        }
+        
+        .history-content {
+            display: flex;
+            align-items: center;
+            gap: 60px;
+        }
+        
+        .history-text {
+            flex: 1;
+        }
+        
+        .history-text h2 {
+            font-size: 3rem;
+            margin-bottom: 30px;
+            color: white;
+        }
+        
+        .history-text p {
+            color: #aaa;
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+        }
+        
+        .history-image {
+            flex: 1;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            animation: floatImage 6s ease-in-out infinite;
+        }
+        
+        .history-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        
+        .racing {
+            padding: 120px 0;
+            background: linear-gradient(rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.95));
+            text-align: center;
+        }
+        
+        .racing h2 {
+            font-size: 3.5rem;
+            margin-bottom: 30px;
+            color: white;
+        }
+        
+        .racing p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto 50px;
+            color: #ccc;
+        }
+        
+        footer {
+            padding: 80px 0 30px;
+            background-color: #050505;
+            border-top: 1px solid #222;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 50px;
+            margin-bottom: 50px;
+        }
+        
+        .footer-logo {
+            width: 150px;
+            margin-bottom: 20px;
+        }
+        
+        .footer-about p {
+            color: #888;
+            margin-bottom: 20px;
+        }
+        
+        .footer-links h3, .footer-contact h3 {
+            font-size: 1.3rem;
+            margin-bottom: 25px;
+            color: white;
+            position: relative;
+            padding-bottom: 10px;
+        }
+        
+        .footer-links h3::after, .footer-contact h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 2px;
+            background-color: #cc0000;
+        }
+        
+        .footer-links ul {
+            list-style: none;
+        }
+        
+        .footer-links ul li {
+            margin-bottom: 12px;
+        }
+        
+        .footer-links ul li a {
+            color: #888;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-links ul li a:hover {
+            color: #cc0000;
+            padding-left: 5px;
+        }
+        
+        .footer-contact p {
+            color: #888;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid #222;
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        @keyframes zoomEffect {
+            0% {
+                transform: scale(1);
+            }
+            100% {
+                transform: scale(1.1);
+            }
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes logoGlow {
+            0% {
+                filter: drop-shadow(0 0 5px rgba(204, 0, 0, 0.5));
+            }
+            100% {
+                filter: drop-shadow(0 0 15px rgba(204, 0, 0, 0.8));
+            }
+        }
+        
+        @keyframes textGlow {
+            0% {
+                text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+            }
+            100% {
+                text-shadow: 0 0 20px rgba(204, 0, 0, 0.8), 0 0 30px rgba(204, 0, 0, 0.4);
+            }
+        }
+        
+        @keyframes cardAppear {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes floatImage {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+        
+        @media (max-width: 992px) {
+            .hero h1 {
+                font-size: 3.5rem;
+            }
+            
+            .history-content {
+                flex-direction: column;
+            }
+            
+            .section-title h2 {
+                font-size: 2.5rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            header {
+                padding: 15px 0;
+            }
+            
+            .header-container {
+                flex-direction: column;
+            }
+            
+            nav ul {
+                margin-top: 20px;
+            }
+            
+            nav ul li {
+                margin: 0 10px;
+            }
+            
+            .hero h1 {
+                font-size: 2.8rem;
+            }
+            
+            .hero p {
+                font-size: 1rem;
+            }
+            
+            .models-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            .section-title h2 {
+                font-size: 2rem;
+            }
+            
+            .performance h2 {
+                font-size: 2.5rem;
+            }
+            
+            .stats {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header id="header">
+        <div class="container header-container">
+            <img src="logoporshe5.jpg" alt="Porsche Logo" class="logo">
+            <nav>
+                <ul>
+                    <li><a href="#home">Главная</a></li>
+                    <li><a href="#models">Модели</a></li>
+                    <li><a href="#performance">Производительность</a></li>
+                    <li><a href="#history">История</a></li>
+                    <li><a href="#racing">Гонки</a></li>
+                    <li><a href="#contact">Контакты</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero" id="home">
+        <div class="hero-bg"></div>
+        <div class="container">
+            <div class="hero-content">
+                <h1>Легенда скорости</h1>
+                <p>С 1931 года Porsche создает автомобили, которые определяют понятие спортивного вождения. Каждая модель сочетает в себе инновационные технологии, непревзойденную производительность и бескомпромиссный дизайн.</p>
+                <a href="#models" class="btn">Исследовать модели</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="models" id="models">
+        <div class="container">
+            <div class="section-title">
+                <h2>Наши модели</h2>
+                <p>Откройте для себя мир Porsche с нашими легендарными моделями, которые устанавливают новые стандарты в автомобильной промышленности.</p>
+            </div>
+            <div class="models-grid">
+                <div class="model-card">
+                    <div class="model-img">
+                        <img src="porshe2.jpg" alt="Porsche Taycan">
+                    </div>
+                    <div class="model-content">
+                        <h3>Porsche Taycan</h3>
+                        <p>Первый полностью электрический спортивный автомобиль Porsche, сочетающий в себе экологичность и невероятную динамику.</p>
+                        <div class="specs">
+                            <div class="spec-item">
+                                <span class="spec-value">2.8s</span>
+                                <span class="spec-label">0-100 км/ч</span>
+                            </div>
+                            <div class="spec-item">
+                                <span class="spec-value">761 л.с.</span>
+                                <span class="spec-label">Мощность</span>
+                            </div>
+                            <div class="spec-item">
+                                <span class="spec-value">260 км</span>
+                                <span class="spec-label">Запас хода</span>
+                            </div>
+                        </div>
+                        <a href="#" class="btn btn-outline">Подробнее</a>
+                    </div>
+                </div>
+                
+                <div class="model-card">
+                    <div class="model-img">
+                        <img src="porshe3.jpg" alt="Porsche Panamera">
+                    </div>
+                    <div class="model-content">
+                        <h3>Porsche Panamera</h3>
+                        <p>Идеальное сочетание спортивного автомобиля и роскошного седана, предлагающее непревзойденный комфорт и производительность.</p>
+                        <div class="specs">
+                            <div class="spec-item">
+                                <span class="spec-value">3.1s</span>
+                                <span class="spec-label">0-100 км/ч</span>
+                            </div>
+                            <div class="spec-item">
+                                <span class="spec-value">630 л.с.</span>
+                                <span class="spec-label">Мощность</span>
+                            </div>
+                            <div class="spec-item">
+                                <span class="spec-value">315 км/ч</span>
+                                <span class="spec-label">Макс. скорость</span>
+                            </div>
+                        </div>
+                        <a href="#" class="btn btn-outline">Подробнее</a>
+                    </div>
+                </div>
+                
+                <div class="model-card">
+                    <div class="model-img">
+                        <img src="porshe4.jpg" alt="Porsche Cayenne">
+                    </div>
+                    <div class="model-content">
+                        <h3>Porsche Cayenne</h3>
+                        <p>Спортивный внедорожник, который доказывает, что практичность и высочайшая производительность могут идти рука об руку.</p>
+                        <div class="specs">
+                            <div class="spec-item">
+                                <span class="spec-value">3.9s</span>
+                                <span class="spec-label">0-100 км/ч</span>
+                            </div>
+                            <div class="spec-item">
+                                <span class="spec-value">550 л.с.</span>
+                                <span class="spec-label">Мощность</span>
+                            </div>
+                            <div class="spec-item">
+                                <span class="spec-value">286 км/ч</span>
+                                <span class="spec-label">Макс. скорость</span>
+                            </div>
+                        </div>
+                        <a href="#" class="btn btn-outline">Подробнее</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="performance" id="performance">
+        <div class="container">
+            <div class="performance-content">
+                <h2>Непревзойденная производительность</h2>
+                <p>Каждый Porsche создан с использованием передовых технологий и инноваций, чтобы обеспечить непревзойденные впечатления от вождения.</p>
+                <a href="#contact" class="btn">Записаться на тест-драйв</a>
+                
+                <div class="stats">
+                    <div class="stat-item">
+                        <div class="stat-value">24</div>
+                        <div class="stat-label">Часа Ле-Мана</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">30,000+</div>
+                        <div class="stat-label">Побед в гонках</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">1,000,000+</div>
+                        <div class="stat-label">911 произведено</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="history" id="history">
+        <div class="container">
+            <div class="history-content">
+                <div class="history-text">
+                    <h2>История легенды</h2>
+                    <p>Основанная Фердинандом Порше в 1931 году, компания изначально занималась разработкой автомобилей и моторов. Первый автомобиль под маркой Porsche - 356 - был представлен в 1948 году.</p>
+                    <p>С тех пор Porsche стал синонимом инноваций, качества и спортивных достижений. От доминирования в гонках "24 часа Ле-Мана" до создания первого гибридного гиперкара 918 Spyder - Porsche всегда на шаг впереди.</p>
+                    <p>Сегодня, оставаясь верной своим корням, компания продолжает развиваться, внедряя электрические технологии и создавая автомобили будущего, которые сохраняют душу настоящих Porsche.</p>
+                    <a href="#" class="btn">Узнать больше</a>
+                </div>
+                <div class="history-image">
+                    <img src="porshe2.jpg" alt="История Porsche">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="racing" id="racing">
+        <div class="container">
+            <h2>Гоночное наследие</h2>
+            <p>Porsche - самый успешный производитель в истории автоспорта. С 1970 года автомобили Porsche одержали более 30 000 побед в гонках по всему миру, включая 19 абсолютных побед в "24 часах Ле-Мана".</p>
+            <a href="#" class="btn btn-outline">Исследовать гоночную историю</a>
+        </div>
+    </section>
+
+    <footer id="contact">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-about">
+                    <img src="logoporshe5.jpg" alt="Porsche Logo" class="footer-logo">
+                    <p>Porsche - немецкий производитель автомобилей, специализирующийся на высокопроизводительных спортивных автомобилях, внедорожниках и седанах. Штаб-квартира находится в Штутгарте, Германия.</p>
+                </div>
+                
+                <div class="footer-links">
+                    <h3>Быстрые ссылки</h3>
+                    <ul>
+                        <li><a href="#home">Главная</a></li>
+                        <li><a href="#models">Модели</a></li>
+                        <li><a href="#performance">Производительность</a></li>
+                        <li><a href="#history">История</a></li>
+                        <li><a href="#racing">Гонки</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-contact">
+                    <h3>Контакты</h3>
+                    <p>✓ Штутгарт, Германия</p>
+                    <p>✓ +49 711 911 0</p>
+                    <p>✓ info@porsche.com</p>
+                    <p>✓ Пн-Пт: 9:00-18:00</p>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2023 Porsche. Все права защищены. | Сайт создан для демонстрации</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if(targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if(targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+        
+        window.addEventListener('scroll', function() {
+            const header = document.getElementById('header');
+            if(window.scrollY > 100) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+        
+        window.addEventListener('load', function() {
+            document.body.style.opacity = '0';
+            document.body.style.transition = 'opacity 1s';
+            
+            setTimeout(() => {
+                document.body.style.opacity = '1';
+            }, 100);
+        });
+    </script>
+</body>
+</html>
